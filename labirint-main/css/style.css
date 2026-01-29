@@ -1,0 +1,16 @@
+*{
+    padding: 0px;
+    margin: 0px;
+}
+
+#main{
+    width: 100vw;
+    height: 100vh;
+    display: flex;
+    align-items: center;
+} 
+#labirint{
+    margin: auto;
+    width: 60%;
+    height: 80%;
+}
