@@ -1,44 +1,49 @@
-/**
- * Pretvori SVG labirint v 2D matriko
- * @param {string} svgId - ID vašega SVG elementa
- * @param {number} rows - Število vrstic v labirintu
- * @param {number} cols - Število stolpcev v labirintu
- * @returns {Array[]} 2D tabela (0 = pot, 1 = stena)
- */
-function parseMazeToTable(svgId, rows, cols) {
-  const svg = document.getElementById(svgId);
-  if (!svg) {
-    console.error("SVG elementa nisem našel!");
-    return [];
-  }
+const ROWS = 62;
+const COLS = 62;
 
-  // Inicializacija prazne matrike z ničlami (poti)
-  let mazeTable = Array.from({ length: rows }, () => Array(cols).fill(0));
 
-  // Pridobimo vse pravokotnike (stene) znotraj SVG
-  const walls = svg.querySelectorAll("rect");
 
-  // Izračunamo širino/višino ene celice glede na SVG viewBox ali dimenzije
-  const cellWidth = svg.viewBox.baseVal.width / cols;
-  const cellHeight = svg.viewBox.baseVal.height / rows;
 
-  walls.forEach((wall) => {
-    const x = wall.x.baseVal.value;
-    const y = wall.y.baseVal.value;
 
-    // Izračunamo indeks v tabeli
-    const col = Math.floor(x / cellWidth);
-    const row = Math.floor(y / cellHeight);
+const container = document.getElementById('svg_container');
+container.innerHTML += LOGO_SVG;
 
-    // Preverimo, da ne gremo izven meja in označimo steno
-    if (row < rows && col < cols) {
-      mazeTable[row][col] = 1;
+const svgMaze1 = document.getElementById('svg_maze_1');
+
+// Select all <line> elements
+const lineElements = svgMaze1.querySelectorAll("line");
+
+// Map the attributes into an array of objects
+const mazeLines = Array.from(lineElements).map(line => ({
+  x1: parseFloat(line.getAttribute("x1")),
+  y1: parseFloat(line.getAttribute("y1")),
+  x2: parseFloat(line.getAttribute("x2")),
+  y2: parseFloat(line.getAttribute("y2"))
+}));
+
+
+const canvas = document.getElementById('labirint');
+console.log(canvas);
+const ctx = canvas.getContext('2d');
+
+const mazeA = Array.from({ length: ROWS }, () => Array(COLS).fill(0));
+
+
+const myMaze = generateEmptyMaze(ROWS, COLS);
+console.log(mazeA);
+
+function canMove(newX, newY, maze) {
+    // 1. Stay inside bounds
+    if (newY < 0 || newY >= maze.length || newX < 0 || newX >= maze[0].length) {
+        return false;
     }
-  });
-
-  return mazeTable;
+    // 2. Check if the cell is a path (0)
+    return maze[newY][newX] === 0;
 }
 
-// Primer uporabe:
-const mazeData = parseMazeToTable("moj-labirint-svg", 10, 10);
-console.table(mazeData);
+// pomembno generiranje labirinta
+function generateEmptyMaze(rows, cols) {
+    // Create an array of arrays filled with 1s (walls)
+    let maze = Array.from({ length: rows }, () => Array(cols).fill(1));
+    return maze;
+}
