@@ -1,21 +1,34 @@
-* {
-  padding: 0%;
-  margin: 0%;
+/* 1. Preprosto centriranje celotne vsebine na strani */
+body {
+    margin: 0;
+    display: flex;
+    justify-content: center; /* To postavi #main točno na vodoravno sredino ekrana */
+    background-color: #f8f9fa; /* Samo za lepši kontrast, lahko izbrišeš */
+}
+
+/* 2. Glavni kontejner - vse, bo padlo na sredino */
+#main {
+    display: flex;
+    flex-direction: column;
+    align-items: center; 
+    margin-top: 50px; /* Malo prostora od vrha ekrana */
+}
+
+/* 3. Tvoj wrapper za labirint */
+#maze_wrapper {
+    position: relative; 
+    width: 700px;
+    height: 700px;
+}
+
+/* 4. Canvas in SVG (ostane isto) */
+#svg_container, #labirint {
+    position: absolute; 
+    top: 0;
+    left: 0;
 }
 
 #labirint {
-  width: 700px;
-  height: 700px;
-  position: absolute;
-  z-index: 1;
-}
-#main {
-  display: flex;
-  justify-content: center; /* Vodoravno centriranje */
-  align-items: center; /* Navpično centriranje */
-  height: 100vh; /* Višina (če želiš na sredino celotne strani) */
-}
-#svg_container{
-  width: 700px;
-  height: 700px;
+    z-index: 10; 
+    pointer-events: none; 
 }
