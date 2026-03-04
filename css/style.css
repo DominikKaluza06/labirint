@@ -32,3 +32,9 @@ body {
     z-index: 10; 
     pointer-events: none; 
 }
+
+#poteze_prikaz{
+    text-align: center; 
+    margin-top: 20px; 
+    font-family: sans-serif;
+}

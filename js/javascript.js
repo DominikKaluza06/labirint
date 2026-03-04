@@ -1,39 +1,29 @@
 window.addEventListener('load', function() {
-    console.log("Stran naložena. Iščem elemente...");
+    console.log("Stran naložena. Zaganjam igro...");
 
-    // 1. Poberemo elemente iz HTML
     const container = document.getElementById('svg_container');
     const canvas = document.getElementById('labirint');
 
-    if (!container || !canvas) {
-        console.error("NAPAKA: Ne najdem 'svg_container' ali 'labirint' v HTML.");
-        return;
+    // --- 1. IZBIRA LABIRINTA ---
+    let izbira = 0; // Privzeto naložimo prvi labirint (indeks 0)
+
+    // Če imamo v spominu listek "ponovenPoskus", izžrebamo naključnega
+    if (sessionStorage.getItem("ponovenPoskus") === "da") {
+        izbira = Math.floor(Math.random() * vsiLabirinti.length);
+        console.log("Ponoven poskus! Naložen labirint številka:", izbira + 1);
     }
 
-    // 2. Preverimo in vstavimo SVG (če še ni)
-    if (typeof LOGO_SVG === 'undefined') {
-        console.error("NAPAKA: LOGO_SVG ni definiran. Preveri js/javascript.js!");
-        return;
-    }
+    container.innerHTML = vsiLabirinti[izbira];
 
-    if (container.innerHTML.trim() === "") {
-        container.innerHTML = LOGO_SVG;
-    }
+    // --- 2. POIŠČEMO SVG IN PREBEREMO ČARTE ---
+    const svgMaze = container.querySelector('svg'); 
 
-    // 3. Zdaj ko je SVG vstavljen, ga poiščemo
-    const svgMaze1 = document.getElementById('svg_maze_1');
-    if (!svgMaze1) {
-        console.error("NAPAKA: SVG elementa ni. Preveri sintakso v LOGO_SVG (tisti '>' znak!).");
-        return;
-    }
-
-    // --- LOGIKA ZA LABIRINT ---
     const ROWS = 61;
     const COLS = 61;
     const SVG_OFFSET = 2;
     const SVG_STEP = 16;
 
-    const lineElements = svgMaze1.querySelectorAll("line");
+    const lineElements = svgMaze.querySelectorAll("line");
 
     const mazeLines = Array.from(lineElements).map(line => ({
         x1: parseFloat(line.getAttribute("x1")),
@@ -73,92 +63,124 @@ window.addEventListener('load', function() {
         }
     });
 
-    // --- SKUPNE SPREMENLJIVKE ZA RISANJE ---
     const cellW = canvas.width / COLS;
     const cellH = canvas.height / ROWS;
 
-    // --- NASTAVITVE IGRALCA ---
-    let player = { 
-        x: 29, 
-        y: 0 
+    let player = { x: 29, y: 0 };
+
+    let sled = []; 
+    sled.push({ x: player.x, y: player.y });
+
+    const slikaCopica = new Image();
+    slikaCopica.src = 'player.png'; 
+
+    // Ko se slika naloži, ponovno nariše sceno, da se čopič takoj prikaže
+    slikaCopica.onload = function() {
+        drawScene();
     };
 
-    // --- FUNKCIJE ZA RISANJE ---
-    function drawScene() {
-        // 1. Pobrišemo celoten canvas preden nariše nov premik
+function drawScene() {
         ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-
-        // 3. Narišemo igralca (MODRA KOCKA)
-        ctx.fillStyle = "blue";
-        const padding = 1; // Da je kocka malo manjša
+        
+        const padding = 1; 
         const nudgeX = -1; 
         const nudgeY = -1; 
 
-        ctx.fillRect(
-            (player.x * cellW) + padding + nudgeX, 
-            (player.y * cellH) + padding + nudgeY, 
-            cellW - (padding * 2), 
-            cellH - (padding * 2)
-        );
+        // --- 1. NARIŠE NEPREKINJENO SLED ---
+        if (sled.length > 0) {
+            ctx.beginPath();
+            ctx.strokeStyle = "lightblue"; 
+            ctx.lineWidth = (cellW / 2);   
+            ctx.lineCap = "round";         
+            ctx.lineJoin = "round";        
+
+            for (let i = 0; i < sled.length; i++) {
+                let center_X = (sled[i].x * cellW) + (cellW / 2) + nudgeX;
+                let center_Y = (sled[i].y * cellH) + (cellH / 2) + nudgeY;
+
+                if (i === 0) {
+                    ctx.moveTo(center_X, center_Y); 
+                } else {
+                    ctx.lineTo(center_X, center_Y); 
+                }
+            }
+            ctx.stroke(); 
+        }
+
+        // --- 2. NARIŠE GLAVNEGA IGRALCA
+        
+        let faktorPovecave = 2; 
+        
+
+        let igralecSirina = cellW * faktorPovecave;
+        let igralecVisina = cellH * faktorPovecave;
+
+        // Izračunamo sredino trenutne celice, kjer stoji igralec
+        let centerCeliceX = (player.x * cellW) + (cellW / 2) + nudgeX;
+        let centerCeliceY = (player.y * cellH) + (cellH / 2) + nudgeY;
+
+        // Zamakne sliko da bo centrirana glede na njeno novo velikost
+        let igralecX = centerCeliceX - (igralecSirina / 2);
+        let igralecY = centerCeliceY - (igralecVisina / 2);
+
+        ctx.drawImage(slikaCopica, igralecX, igralecY, igralecSirina, igralecVisina);
+
     }
 
-// --- NASTAVITVE IGRE IN PREMIKOV ---
-    let preostaliPremiki = 10;
-    let igraAktivna = true; // Stikalo, ki omogoča ali onemogoča premikanje
+    let preostaliPremiki = 1000;
+    let igraAktivna = true; 
 
-    // --- PREMIKANJE IGRALCA (KONTROLE) ---
+    const htmlPoteze = document.getElementById('poteze_stevilka');
+    if (htmlPoteze) {
+        htmlPoteze.innerText = preostaliPremiki;
+    }
+
     window.addEventListener('keydown', function(e) {
-        // 1. Če smo porabili vse premike, funkcija takoj zaključi 
         if (!igraAktivna) return;
 
         let nextX = player.x;
         let nextY = player.y;
 
-        // Katera tipka je bila pritisnjena?
-        if (e.key === "ArrowUp" || e.key === "w") {
-            nextY--;
-            e.preventDefault(); 
-        } else if (e.key === "ArrowDown" || e.key === "s") {
-            nextY++;
-            e.preventDefault();
-        } else if (e.key === "ArrowLeft" || e.key === "a") {
-            nextX--;
-            e.preventDefault(); 
-        } else if (e.key === "ArrowRight" || e.key === "d") {
-            nextX++;
-            e.preventDefault(); 
-        } else {
-            return; 
-        }
+        if (e.key === "ArrowUp" || e.key === "w") { nextY--; e.preventDefault(); } 
+        else if (e.key === "ArrowDown" || e.key === "s") { nextY++; e.preventDefault(); } 
+        else if (e.key === "ArrowLeft" || e.key === "a") { nextX--; e.preventDefault(); } 
+        else if (e.key === "ArrowRight" || e.key === "d") { nextX++; e.preventDefault(); } 
+        else { return; }
 
-        // --- PREVERJANJE ZIDOV IN LOGIKA ODŠTEVANJA ---
         if (nextX >= 0 && nextX < COLS && nextY >= 0 && nextY < ROWS) {
-            if (mazeA[nextY][nextX] === 0) { // Če je pot prosta
-                
-                // Da se izognemo odštevanju, če se zabijamo v zid
+            if (mazeA[nextY][nextX] === 0) { 
                 if (player.x !== nextX || player.y !== nextY) {
-                    
-                    // Premik
                     player.x = nextX;
                     player.y = nextY;
+                    
+                    sled.push({ x: player.x, y: player.y });
+
                     drawScene(); 
 
-                    // Logika števca
-                    preostaliPremiki--;
-                    console.log("Preostali premiki:", preostaliPremiki); // Začasno spremljamo v konzoli
+                    // --- PREVERI, ČE JE IGRALEC NA CILJU ---
+                    if (player.x === 29 && player.y === (ROWS - 1)) {
+                        igraAktivna = false; // Ustavi premikanje
+                        zmaga();             // Pokliče funkcijo za zmago
+                        return; 
+                    }
 
-                    // Preverimo, če smo porabili vse
+                    // Če še ni na cilju zmanjšamo število potez
+                    preostaliPremiki--;
+
+                    if (htmlPoteze) {
+                        htmlPoteze.innerText = preostaliPremiki;
+                    }
+
+                    // Preverimo poraz
                     if (preostaliPremiki <= 0) {
-                        igraAktivna = false; // Zaklene igro
-                        konecIgre();
+                        igraAktivna = false; 
+                        konecIgre(); 
                     }
                 }
             }
         }
     });
 
-    // Prvi izris takoj, ko se stran naloži
     drawScene();
     console.log("Labirint in igralec uspešno izrisana!");
 });

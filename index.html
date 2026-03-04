@@ -15,10 +15,47 @@
         <div id="svg_container"></div>
         <canvas id="labirint"></canvas>
       </div>
+      <div id="poteze_prikaz">
+        <h2>barve je ostalo še za: <span id="poteze_stevilka">1000</span> premikov</h2>
+      </div>
     </div>
     </main>
 
-    <script src="js/javascript.js"></script> 
-    <script src="js/labirnt.js"></script>
+<script>
+        const logikaDatoteke = [
+            'js/labirnt1.js',
+            'js/labirnt2.js',
+            'js/labirint3.js',
+            'js/labirint4.js',
+            'js/labirint5.js',
+            'js/labirint6.js',
+            'js/labirint7.js',
+            'js/labirint8.js',
+            'js/labirint9.js',
+            'js/labirint10.js',
+        ];
+
+        let izbira = 0; 
+
+            let zadnjaIzbira = sessionStorage.getItem("zadnjiLabirint");
+            do {
+                izbira = Math.floor(Math.random() * logikaDatoteke.length); 
+            } while (izbira == zadnjaIzbira);
+        
+        sessionStorage.setItem("zadnjiLabirint", izbira);
+
+        const svgSkripta = document.createElement('script');
+        svgSkripta.src = svgDatoteke[izbira]; 
+        document.body.appendChild(svgSkripta);
+
+        svgSkripta.onload = function() {
+            const logikaSkripta = document.createElement('script');
+            logikaSkripta.src = logikaDatoteke[izbira];
+            document.body.appendChild(logikaSkripta);
+        };
+    </script>
+    <script src="js/labirinti.js"></script>
+    <script src="js/functions.js"></script>
+    <script src="js/javascript.js"></script>
   </body>
 </html>
