@@ -5,7 +5,7 @@ window.addEventListener('load', function() {
     const canvas = document.getElementById('labirint');
 
     // --- 1. IZBIRA LABIRINTA ---
-    let izbira = 0; // Privzeto naložimo prvi labirint (indeks 0)
+    var izbira = 0; // Privzeto naložimo prvi labirint (indeks 0)
 
     // Če imamo v spominu listek "ponovenPoskus", izžrebamo naključnega
     if (sessionStorage.getItem("ponovenPoskus") === "da") {
@@ -36,7 +36,7 @@ window.addEventListener('load', function() {
     canvas.width = 700;
     canvas.height = 700;
 
-    let mazeA = Array.from({ length: ROWS }, () => Array(COLS).fill(0));
+    var mazeA = Array.from({ length: ROWS }, () => Array(COLS).fill(0));
 
     function svgToGridIndex(coordinate) {
         return Math.round((coordinate - SVG_OFFSET) / SVG_STEP) * 2;
@@ -51,13 +51,13 @@ window.addEventListener('load', function() {
         if (x1 === x2) {
             const startY = Math.min(y1, y2);
             const endY = Math.max(y1, y2);
-            for (let y = startY; y <= endY; y++) {
+            for (var y = startY; y <= endY; y++) {
                 if (y < ROWS && x1 < COLS) mazeA[y][x1] = 1;
             }
         } else if (y1 === y2) {
             const startX = Math.min(x1, x2);
             const endX = Math.max(x1, x2);
-            for (let x = startX; x <= endX; x++) {
+            for (var x = startX; x <= endX; x++) {
                 if (y1 < ROWS && x < COLS) mazeA[y1][x] = 1;
             }
         }
@@ -66,9 +66,9 @@ window.addEventListener('load', function() {
     const cellW = canvas.width / COLS;
     const cellH = canvas.height / ROWS;
 
-    let player = { x: 29, y: 0 };
+    var player = { x: 29, y: 0 };
 
-    let sled = []; 
+    var sled = []; 
     sled.push({ x: player.x, y: player.y });
 
     const slikaCopica = new Image();
@@ -94,9 +94,9 @@ function drawScene() {
             ctx.lineCap = "round";         
             ctx.lineJoin = "round";        
 
-            for (let i = 0; i < sled.length; i++) {
-                let center_X = (sled[i].x * cellW) + (cellW / 2) + nudgeX;
-                let center_Y = (sled[i].y * cellH) + (cellH / 2) + nudgeY;
+            for (var i = 0; i < sled.length; i++) {
+                var center_X = (sled[i].x * cellW) + (cellW / 2) + nudgeX;
+                var center_Y = (sled[i].y * cellH) + (cellH / 2) + nudgeY;
 
                 if (i === 0) {
                     ctx.moveTo(center_X, center_Y); 
@@ -109,26 +109,26 @@ function drawScene() {
 
         // --- 2. NARIŠE GLAVNEGA IGRALCA
         
-        let faktorPovecave = 2; 
+        var faktorPovecave = 2; 
         
 
-        let igralecSirina = cellW * faktorPovecave;
-        let igralecVisina = cellH * faktorPovecave;
+        var igralecSirina = cellW * faktorPovecave;
+        var igralecVisina = cellH * faktorPovecave;
 
         // Izračunamo sredino trenutne celice, kjer stoji igralec
-        let centerCeliceX = (player.x * cellW) + (cellW / 2) + nudgeX;
-        let centerCeliceY = (player.y * cellH) + (cellH / 2) + nudgeY;
+        var centerCeliceX = (player.x * cellW) + (cellW / 2) + nudgeX;
+        var centerCeliceY = (player.y * cellH) + (cellH / 2) + nudgeY;
 
         // Zamakne sliko da bo centrirana glede na njeno novo velikost
-        let igralecX = centerCeliceX - (igralecSirina / 2);
-        let igralecY = centerCeliceY - (igralecVisina / 2);
+        var igralecX = centerCeliceX - (igralecSirina / 2);
+        var igralecY = centerCeliceY - (igralecVisina / 2);
 
         ctx.drawImage(slikaCopica, igralecX, igralecY, igralecSirina, igralecVisina);
 
     }
 
-    let preostaliPremiki = 1000;
-    let igraAktivna = true; 
+    var preostaliPremiki = 1000;
+    var igraAktivna = true; 
 
     const htmlPoteze = document.getElementById('poteze_stevilka');
     if (htmlPoteze) {
@@ -138,8 +138,8 @@ function drawScene() {
     window.addEventListener('keydown', function(e) {
         if (!igraAktivna) return;
 
-        let nextX = player.x;
-        let nextY = player.y;
+        var nextX = player.x;
+        var nextY = player.y;
 
         if (e.key === "ArrowUp" || e.key === "w") { nextY--; e.preventDefault(); } 
         else if (e.key === "ArrowDown" || e.key === "s") { nextY++; e.preventDefault(); } 
