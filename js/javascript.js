@@ -83,8 +83,8 @@ function drawScene() {
         ctx.clearRect(0, 0, canvas.width, canvas.height);
         
         const padding = 1; 
-        const nudgeX = -1; 
-        const nudgeY = -1; 
+        const zamikX = -1; 
+        const zamikY = -1; 
 
         // --- 1. NARIŠE NEPREKINJENO SLED ---
         if (sled.length > 0) {
@@ -95,8 +95,8 @@ function drawScene() {
             ctx.lineJoin = "round";        
 
             for (var i = 0; i < sled.length; i++) {
-                var center_X = (sled[i].x * cellW) + (cellW / 2) + nudgeX;
-                var center_Y = (sled[i].y * cellH) + (cellH / 2) + nudgeY;
+                var center_X = (sled[i].x * cellW) + (cellW / 2) + zamikX;
+                var center_Y = (sled[i].y * cellH) + (cellH / 2) + zamikY;
 
                 if (i === 0) {
                     ctx.moveTo(center_X, center_Y); 
@@ -116,8 +116,8 @@ function drawScene() {
         var igralecVisina = cellH * faktorPovecave;
 
         // Izračunamo sredino trenutne celice, kjer stoji igralec
-        var centerCeliceX = (player.x * cellW) + (cellW / 2) + nudgeX;
-        var centerCeliceY = (player.y * cellH) + (cellH / 2) + nudgeY;
+        var centerCeliceX = (player.x * cellW) + (cellW / 2) + zamikX;
+        var centerCeliceY = (player.y * cellH) + (cellH / 2) + zamikY;
 
         // Zamakne sliko da bo centrirana glede na njeno novo velikost
         var igralecX = centerCeliceX - (igralecSirina / 2);
@@ -147,22 +147,19 @@ function drawScene() {
         else if (e.key === "ArrowRight" || e.key === "d") { nextX++; e.preventDefault(); } 
         else { return; }
 
-		if (nextX >= 0 && nextX < COLS && nextY >= 0 && nextY < ROWS) {
+if (nextX >= 0 && nextX < COLS && nextY >= 0 && nextY < ROWS) {
             if (mazeA[nextY][nextX] === 0) { 
                 if (player.x !== nextX || player.y !== nextY) {
                     
-                    // --- NOVO: PREVERIMO, ČE SMO NA TEM POLJU ŽE BILI ---
-                    // Funkcija 'some' preveri vse elemente v arrayu 'sled' in vrne 'true', če najde ujemanje.
+                    // 1. Preverimo, če smo na tem polju že bili
                     var zeObiskano = sled.some(polje => polje.x === nextX && polje.y === nextY);
 
-                    // Igralca premaknemo ne glede na vse
+                    // 2. Igralca fizično premaknemo
                     player.x = nextX;
                     player.y = nextY;
                     
-                    // Če na tem polju še nismo bili, ga dodamo v sled
-                    if (!zeObiskano) {
-                        sled.push({ x: player.x, y: player.y });
-                    }
+                    // Tako bo črta vedno narisana zvezno po stopinjah in ne bo poševnic.
+                    sled.push({ x: player.x, y: player.y });
 
                     drawScene(); 
 
@@ -173,7 +170,7 @@ function drawScene() {
                         return; 
                     }
 
-                    // --- NOVO: POTEZE ODŠTEJEMO SAMO, ČE POLJE ŠE NI BILO OBISKANO ---
+                    // --- POTEZE ODŠTEJEMO SAMO, ČE POLJE ŠE NI BILO OBISKANO ---
                     if (!zeObiskano) {
                         preostaliPremiki--;
 
