@@ -127,7 +127,7 @@ function drawScene() {
 
     }
 
-    var preostaliPremiki = 1000;
+    var preostaliPremiki = 800;
     var igraAktivna = true; 
 
     const htmlPoteze = document.getElementById('poteze_stevilka');
@@ -147,34 +147,45 @@ function drawScene() {
         else if (e.key === "ArrowRight" || e.key === "d") { nextX++; e.preventDefault(); } 
         else { return; }
 
-        if (nextX >= 0 && nextX < COLS && nextY >= 0 && nextY < ROWS) {
+		if (nextX >= 0 && nextX < COLS && nextY >= 0 && nextY < ROWS) {
             if (mazeA[nextY][nextX] === 0) { 
                 if (player.x !== nextX || player.y !== nextY) {
+                    
+                    // --- NOVO: PREVERIMO, ČE SMO NA TEM POLJU ŽE BILI ---
+                    // Funkcija 'some' preveri vse elemente v arrayu 'sled' in vrne 'true', če najde ujemanje.
+                    var zeObiskano = sled.some(polje => polje.x === nextX && polje.y === nextY);
+
+                    // Igralca premaknemo ne glede na vse
                     player.x = nextX;
                     player.y = nextY;
                     
-                    sled.push({ x: player.x, y: player.y });
+                    // Če na tem polju še nismo bili, ga dodamo v sled
+                    if (!zeObiskano) {
+                        sled.push({ x: player.x, y: player.y });
+                    }
 
                     drawScene(); 
 
                     // --- PREVERI, ČE JE IGRALEC NA CILJU ---
                     if (player.x === 29 && player.y === (ROWS - 1)) {
-                        igraAktivna = false; // Ustavi premikanje
-                        zmaga();             // Pokliče funkcijo za zmago
+                        igraAktivna = false; 
+                        zmaga();             
                         return; 
                     }
 
-                    // Če še ni na cilju zmanjšamo število potez
-                    preostaliPremiki--;
+                    // --- NOVO: POTEZE ODŠTEJEMO SAMO, ČE POLJE ŠE NI BILO OBISKANO ---
+                    if (!zeObiskano) {
+                        preostaliPremiki--;
 
-                    if (htmlPoteze) {
-                        htmlPoteze.innerText = preostaliPremiki;
-                    }
+                        if (htmlPoteze) {
+                            htmlPoteze.innerText = preostaliPremiki;
+                        }
 
-                    // Preverimo poraz
-                    if (preostaliPremiki <= 0) {
-                        igraAktivna = false; 
-                        konecIgre(); 
+                        // Preverimo poraz
+                        if (preostaliPremiki <= 0) {
+                            igraAktivna = false; 
+                            konecIgre(); 
+                        }
                     }
                 }
             }
