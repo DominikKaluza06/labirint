@@ -11,9 +11,22 @@
   <body>
     <main>
     <div id="main">
-      <div id="maze_wrapper">
-        <div id="svg_container"></div>
-        <canvas id="labirint"></canvas>
+      <div id="naslov_igre"><h1>BARVANJE FASADE</h1></div>
+      <div id="igra" >
+        <div id="paleta">
+          <div class="vedro" id="modra"  onclick="izberiBarvo('lightblue')"></div>
+          <div class="vedro" id="rdeca" onclick="izberiBarvo('#ff4d4d')"></div>
+          <div class="vedro" id="rumena" onclick="izberiBarvo('#ffcc00')"></div> 
+          <div class="vedro" id="zelena"onclick="izberiBarvo('#33cc33')"></div>
+          <div class="vedro" id="vijola" onclick="izberiBarvo('#9933ff')"></div>
+          <div class="vedro" id="roza" onclick="izberiBarvo('#ff99cc')"></div> 
+        </div>
+
+        <div id="maze_wrapper">
+          <div id="svg_container"></div>
+          <canvas id="labirint"></canvas>
+        </div>
+
       </div>
       <div id="poteze_prikaz">
         <h2>barve je ostalo še za: <span id="poteze_stevilka">1000</span> premikov</h2>

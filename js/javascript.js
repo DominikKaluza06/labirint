@@ -69,7 +69,7 @@ window.addEventListener('load', function() {
     var player = { x: 29, y: 0 };
 
     var sled = []; 
-    sled.push({ x: player.x, y: player.y });
+    sled.push({ x: player.x, y: player.y, barva: window.trenutnaBarva });
 
     const slikaCopica = new Image();
     slikaCopica.src = 'player.png'; 
@@ -86,30 +86,30 @@ function drawScene() {
         const zamikX = -1; 
         const zamikY = -1; 
 
-        // --- 1. NARIŠE NEPREKINJENO SLED ---
-        if (sled.length > 0) {
-            ctx.beginPath();
-            ctx.strokeStyle = "lightblue"; 
+// --- 1. NARIŠE NEPREKINJENO SLED (VEČBARVNO) ---
+        if (sled.length > 1) {
             ctx.lineWidth = (cellW / 2);   
             ctx.lineCap = "round";         
             ctx.lineJoin = "round";        
 
-            for (var i = 0; i < sled.length; i++) {
-                var center_X = (sled[i].x * cellW) + (cellW / 2) + zamikX;
-                var center_Y = (sled[i].y * cellH) + (cellH / 2) + zamikY;
+            for (var i = 1; i < sled.length; i++) {
+                ctx.beginPath();
+                ctx.strokeStyle = sled[i].barva; 
 
-                if (i === 0) {
-                    ctx.moveTo(center_X, center_Y); 
-                } else {
-                    ctx.lineTo(center_X, center_Y); 
-                }
+                var prevX = (sled[i-1].x * cellW) + (cellW / 2) + zamikX;
+                var prevY = (sled[i-1].y * cellH) + (cellH / 2) + zamikY;
+                ctx.moveTo(prevX, prevY); 
+
+                var currX = (sled[i].x * cellW) + (cellW / 2) + zamikX;
+                var currY = (sled[i].y * cellH) + (cellH / 2) + zamikY;
+                ctx.lineTo(currX, currY); 
+                
+                ctx.stroke(); 
             }
-            ctx.stroke(); 
         }
-
         // --- 2. NARIŠE GLAVNEGA IGRALCA
         
-        var faktorPovecave = 2; 
+        var faktorPovecave = 5; 
         
 
         var igralecSirina = cellW * faktorPovecave;
@@ -119,11 +119,15 @@ function drawScene() {
         var centerCeliceX = (player.x * cellW) + (cellW / 2) + zamikX;
         var centerCeliceY = (player.y * cellH) + (cellH / 2) + zamikY;
 
-        // Zamakne sliko da bo centrirana glede na njeno novo velikost
-        var igralecX = centerCeliceX - (igralecSirina / 2);
-        var igralecY = centerCeliceY - (igralecVisina / 2);
+        // --- DODATNI ROČNI ZAMIK (spremeni te številke po občutku) ---
+        var premikLevoDesno = -5; // Negativno gre LEVO, pozitivno DESNO
+        var premikGorDol = 5;     // Pozitivno gre DOL, negativno GOR
 
-        ctx.drawImage(slikaCopica, igralecX, igralecY, igralecSirina, igralecVisina);
+        // Končni izračun pozicije slike
+        var igralecX = centerCeliceX + premikLevoDesno; 
+        var igralecY = (centerCeliceY - igralecVisina) + premikGorDol; 
+
+        ctx.drawImage(slikaCopica, igralecX, igralecY, igralecSirina, igralecVisina);   
 
     }
 
@@ -158,8 +162,7 @@ if (nextX >= 0 && nextX < COLS && nextY >= 0 && nextY < ROWS) {
                     player.x = nextX;
                     player.y = nextY;
                     
-                    // Tako bo črta vedno narisana zvezno po stopinjah in ne bo poševnic.
-                    sled.push({ x: player.x, y: player.y });
+                    sled.push({ x: player.x, y: player.y, barva: window.trenutnaBarva });   
 
                     drawScene(); 
 

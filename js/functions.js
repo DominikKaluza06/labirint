@@ -3,6 +3,13 @@ const defaultSwalConfig = {
   background: '#1e1f20', 
 };
 
+// Privzeta barva čopiča
+    window.trenutnaBarva = "lightblue"; 
+
+    window.izberiBarvo = function(novaBarva) {
+        window.trenutnaBarva = novaBarva;
+    };
+
 // Funkcija kpo zgubvis 
 function konecIgre() { 
     Swal.fire({

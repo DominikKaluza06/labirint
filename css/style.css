@@ -2,8 +2,9 @@
 body {
     margin: 0;
     display: flex;
-    justify-content: center; /* To postavi #main točno na vodoravno sredino ekrana */
-    background-color: #f8f9fa; /* Samo za lepši kontrast, lahko izbrišeš */
+    justify-content: center; 
+    background-image: url('../fasada.jpg');
+    background-size: cover;
 }
 
 /* 2. Glavni kontejner - vse, bo padlo na sredino */
@@ -13,7 +14,54 @@ body {
     align-items: center; 
     margin-top: 50px; /* Malo prostora od vrha ekrana */
 }
+#igra{
+    display: flex; 
+    justify-content: center; 
+    align-items: flex-start; 
+    gap: 20px;
+}
+#paleta {
+    display: flex;
+    flex-direction: column;
+    gap: 15px; /* Razmak med vedri */
+    padding-top: 50px;
+}
+.vedro {
+    width: 50px;
+    height: 50px;
+    cursor: pointer;
+}
+.vedro:hover {
+    transform: scale(1.2);
+}
+#modra{
+    background-color:lightblue;
+}
+#rdeca{
+    background-color: #ff4d4d;
+}
+#rumena{
+    background-color: #ffcc00;
+}
+#zelena{
+    background-color: #33cc33;
+}
+#vijola{
+    background-color: #9933ff;
+}
+#roza{
+    background-color: #ff99cc;
+}
+#naslov_igre {
+    text-align: center;
+    margin-bottom: 20px;
+    font-family: Arial, sans-serif;
+}
 
+#naslov_igre h1 {
+    margin: 0;
+    font-size: 40px;
+}
 /* 3. Tvoj wrapper za labirint */
 #maze_wrapper {
     position: relative; 
