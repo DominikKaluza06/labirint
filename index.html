@@ -1,25 +1,28 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Labirint</title>
-    <link rel="stylesheet" href="css/style.css">
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-    <script src="js/functions.js"></script>
-  </head>
-  <body>
-    <main>
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Labirint</title>
+  <link rel="stylesheet" href="css/style.css">
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+  <script src="js/functions.js"></script>
+</head>
+<body>
+  <main>
     <div id="main">
-      <div id="naslov_igre"><h1>BARVANJE FASADE</h1></div>
-      <div id="igra" >
+      <div id="naslov_igre">
+        <h1>BARVANJE FASADE</h1>
+      </div>
+      <div id="igra">
         <div id="paleta">
-          <div class="vedro" id="modra"  onclick="izberiBarvo('lightblue')"></div>
+          <div class="vedro" id="modra" onclick="izberiBarvo('lightblue')"></div>
           <div class="vedro" id="rdeca" onclick="izberiBarvo('#ff4d4d')"></div>
-          <div class="vedro" id="rumena" onclick="izberiBarvo('#ffcc00')"></div> 
-          <div class="vedro" id="zelena"onclick="izberiBarvo('#33cc33')"></div>
+          <div class="vedro" id="rumena" onclick="izberiBarvo('#ffcc00')"></div>
+          <div class="vedro" id="zelena" onclick="izberiBarvo('#33cc33')"></div>
           <div class="vedro" id="vijola" onclick="izberiBarvo('#9933ff')"></div>
-          <div class="vedro" id="roza" onclick="izberiBarvo('#ff99cc')"></div> 
+          <div class="vedro" id="roza" onclick="izberiBarvo('#ff99cc')"></div>
         </div>
 
         <div id="maze_wrapper">
@@ -32,43 +35,31 @@
         <h2>barve je ostalo še za: <span id="poteze_stevilka">1000</span> premikov</h2>
       </div>
     </div>
-    </main>
+  </main>
+  <script src="js/labirinti.js"></script>
+  <script>
+    const stLabirintov = vsiLabirinti.length;
 
-<script>
-        const logikaDatoteke = [
-            'js/labirnt1.js',
-            'js/labirnt2.js',
-            'js/labirint3.js',
-            'js/labirint4.js',
-            'js/labirint5.js',
-            'js/labirint6.js',
-            'js/labirint7.js',
-            'js/labirint8.js',
-            'js/labirint9.js',
-            'js/labirint10.js',
-        ];
+    let izbira = 0;
+    let zadnjaIzbira = sessionStorage.getItem("zadnjiLabirint");
 
-        let izbira = 0; 
+    function nastaviRandomLabirint() {
+  let izbira;
+  let zadnjaIzbira = sessionStorage.getItem("zadnjiLabirint");
+  const stLabirintov = vsiLabirinti.length;
 
-            let zadnjaIzbira = sessionStorage.getItem("zadnjiLabirint");
-            do {
-                izbira = Math.floor(Math.random() * logikaDatoteke.length); 
-            } while (izbira == zadnjaIzbira);
-        
-        sessionStorage.setItem("zadnjiLabirint", izbira);
+  do {
+    izbira = Math.floor(Math.random() * stLabirintov);
+  } while (izbira == zadnjaIzbira);
 
-        const svgSkripta = document.createElement('script');
-        svgSkripta.src = svgDatoteke[izbira]; 
-        document.body.appendChild(svgSkripta);
+  sessionStorage.setItem("zadnjiLabirint", izbira);
 
-        svgSkripta.onload = function() {
-            const logikaSkripta = document.createElement('script');
-            logikaSkripta.src = logikaDatoteke[izbira];
-            document.body.appendChild(logikaSkripta);
-        };
-    </script>
-    <script src="js/labirinti.js"></script>
-    <script src="js/functions.js"></script>
-    <script src="js/javascript.js"></script>
-  </body>
+  document.getElementById("svg_container").innerHTML = vsiLabirinti[izbira];
+}   
+  </script>
+
+  <script src="js/functions.js"></script>
+  <script src="js/javascript.js"></script>
+</body>
+
 </html>
