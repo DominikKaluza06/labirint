@@ -34,8 +34,9 @@ body {
 .vedro:hover {
     transform: scale(1.2);
 }
-#modra{
-    background-color:lightblue;
+#modra {
+    background-image: url('../istockphoto-2119231058-612x612.jpg');
+    background-size: cover;
 }
 #rdeca{
     background-color: #ff4d4d;
@@ -85,4 +86,5 @@ body {
     text-align: center; 
     margin-top: 20px; 
     font-family: sans-serif;
+
 }
