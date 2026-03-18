@@ -3,7 +3,7 @@ body {
     margin: 0;
     display: flex;
     justify-content: center; 
-    background-image: url('../fasada.jpg');
+    background-image: url('../slike/fasadajpg');
     background-size: cover;
 }
 
@@ -13,6 +13,7 @@ body {
     flex-direction: column;
     align-items: center; 
     margin-top: 50px; /* Malo prostora od vrha ekrana */
+    background-color: rgba(255, 255, 255, 0.7);
 }
 #igra{
     display: flex; 
@@ -27,32 +28,34 @@ body {
     padding-top: 50px;
 }
 .vedro {
-    width: 50px;
-    height: 50px;
+    width: 80px;
+    height: 80px;
     cursor: pointer;
 }
 .vedro:hover {
     transform: scale(1.2);
 }
 #modra {
-    background-image: url('../istockphoto-2119231058-612x612.jpg');
+    background-image: url('../slike/modra.png');
     background-size: cover;
 }
 #rdeca{
-    background-color: #ff4d4d;
+    background-image: url('../slike/rdeca.png');
+    background-size: cover;
 }
 #rumena{
-    background-color: #ffcc00;
+    background-image: url('../slike/rumena.png');
+    background-size: cover;
 }
 #zelena{
-    background-color: #33cc33;
+    background-image: url('../slike/zelea.png');
+    background-size: cover;
 }
 #vijola{
-    background-color: #9933ff;
+    background-image: url('../slike/vijolicna.png');
+    background-size: cover;
 }
-#roza{
-    background-color: #ff99cc;
-}
+
 #naslov_igre {
     text-align: center;
     margin-bottom: 20px;

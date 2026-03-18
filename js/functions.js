@@ -10,7 +10,12 @@ const defaultSwalConfig = {
         window.trenutnaBarva = novaBarva;
     };
 
-// Funkcija kpo zgubvis 
+//labirint reset
+window.onload = function() {
+  nastaviRandomLabirint();
+};
+
+// Funkcija ko zgubvis 
 function konecIgre() { 
     Swal.fire({
       ...defaultSwalConfig,

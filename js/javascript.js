@@ -1,11 +1,7 @@
 window.addEventListener('load', function() {
-    console.log("Stran naložena. Zaganjam igro...");
 
     const container = document.getElementById('svg_container');
     const canvas = document.getElementById('labirint');
-
-    // --- 1. IZBIRA LABIRINTA ---
-    var izbira = 0; // Privzeto naložimo prvi labirint (indeks 0)
 
     // Če imamo v spominu listek "ponovenPoskus", izžrebamo naključnega
     if (sessionStorage.getItem("ponovenPoskus") === "da") {
@@ -72,7 +68,7 @@ window.addEventListener('load', function() {
     sled.push({ x: player.x, y: player.y, barva: window.trenutnaBarva });
 
     const slikaCopica = new Image();
-    slikaCopica.src = 'player.png'; 
+    slikaCopica.src = 'slike/player.png'; 
 
     // Ko se slika naloži, ponovno nariše sceno, da se čopič takoj prikaže
     slikaCopica.onload = function() {

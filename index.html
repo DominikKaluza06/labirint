@@ -9,56 +9,55 @@
   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
   <script src="js/functions.js"></script>
 </head>
+
 <body>
   <main>
     <div id="main">
-      <div id="naslov_igre">
-        <h1>BARVANJE FASADE</h1>
-      </div>
+
+
       <div id="igra">
         <div id="paleta">
-          <div class="vedro" id="modra" onclick="izberiBarvo('lightblue')"></div>
+          <div class="vedro" id="modra" onclick="izberiBarvo('#0051ff')"></div>
           <div class="vedro" id="rdeca" onclick="izberiBarvo('#ff4d4d')"></div>
-          <div class="vedro" id="rumena" onclick="izberiBarvo('#ffcc00')"></div>
-          <div class="vedro" id="zelena" onclick="izberiBarvo('#33cc33')"></div>
-          <div class="vedro" id="vijola" onclick="izberiBarvo('#9933ff')"></div>
-          <div class="vedro" id="roza" onclick="izberiBarvo('#ff99cc')"></div>
+          <div class="vedro" id="rumena" onclick="izberiBarvo('#ffef00')"></div>
+          <div class="vedro" id="zelena" onclick="izberiBarvo('#2cff00')"></div>
+          <div class="vedro" id="vijola" onclick="izberiBarvo('#fb00ff')"></div>
+        </div>
+        <div id="lab">
+          <div id="naslov_igre">
+            <h1>BARVANJE FASADE</h1>
+          </div>
+          <div id="maze_wrapper">
+            <div id="svg_container"></div>
+            <canvas id="labirint"></canvas>
+          </div>
+          <div id="poteze_prikaz">
+            <h2>barve je ostalo še za: <span id="poteze_stevilka">1000</span> premikov</h2>
+          </div>
         </div>
 
-        <div id="maze_wrapper">
-          <div id="svg_container"></div>
-          <canvas id="labirint"></canvas>
-        </div>
-
-      </div>
-      <div id="poteze_prikaz">
-        <h2>barve je ostalo še za: <span id="poteze_stevilka">1000</span> premikov</h2>
       </div>
     </div>
   </main>
   <script src="js/labirinti.js"></script>
   <script>
-    const stLabirintov = vsiLabirinti.length;
-
-    let izbira = 0;
-    let zadnjaIzbira = sessionStorage.getItem("zadnjiLabirint");
+    var izbira;
 
     function nastaviRandomLabirint() {
-  let izbira;
-  let zadnjaIzbira = sessionStorage.getItem("zadnjiLabirint");
-  const stLabirintov = vsiLabirinti.length;
+      const stLabirintov = vsiLabirinti.length;
+      var zadnjaIzbira = sessionStorage.getItem("zadnjiLabirint");
 
-  do {
-    izbira = Math.floor(Math.random() * stLabirintov);
-  } while (izbira == zadnjaIzbira);
+      do {
+        izbira = Math.floor(Math.random() * stLabirintov);
+      } while (izbira == zadnjaIzbira);
 
-  sessionStorage.setItem("zadnjiLabirint", izbira);
+      sessionStorage.setItem("zadnjiLabirint", izbira);
+      document.getElementById("svg_container").innerHTML = vsiLabirinti[izbira];
 
-  document.getElementById("svg_container").innerHTML = vsiLabirinti[izbira];
-}   
+      console.log("Izbran labirint (indeks): " + izbira);
+    }
   </script>
 
-  <script src="js/functions.js"></script>
   <script src="js/javascript.js"></script>
 </body>
 
