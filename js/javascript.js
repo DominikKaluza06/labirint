@@ -3,7 +3,7 @@ window.addEventListener('load', function() {
     const container = document.getElementById('svg_container');
     const canvas = document.getElementById('labirint');
 
-    // Če imamo v spominu listek "ponovenPoskus", izžrebamo naključnega
+    // Če imamo v spominu var "ponovenPoskus", izžrebamo naključnega
     if (sessionStorage.getItem("ponovenPoskus") === "da") {
         izbira = Math.floor(Math.random() * vsiLabirinti.length);
         console.log("Ponoven poskus! Naložen labirint številka:", izbira + 1);
@@ -151,10 +151,10 @@ if (nextX >= 0 && nextX < COLS && nextY >= 0 && nextY < ROWS) {
             if (mazeA[nextY][nextX] === 0) { 
                 if (player.x !== nextX || player.y !== nextY) {
                     
-                    // 1. Preverimo, če smo na tem polju že bili
+                    // 1. Preveri, ce je na tem polju že bil
                     var zeObiskano = sled.some(polje => polje.x === nextX && polje.y === nextY);
 
-                    // 2. Igralca fizično premaknemo
+                    // 2. Igralca fizično premakne
                     player.x = nextX;
                     player.y = nextY;
                     
