@@ -95,10 +95,19 @@ Med premikanjem se pot sproti obarva, kar omogoča vizualno sledenje rešitve.
 Dominik Kaluža
 </p>
 
-<hr>
-
-<h2>📄 Licenca</h2>
+<h2>📜 Licenca</h2>
 
 <p>
-Projekt je namenjen izobraževalni uporabi.
+Ta projekt je licenciran pod pogoji licence
+<b>GNU General Public License v3.0</b>.
+</p>
+
+<p>
+Podrobnosti si lahko ogledaš tukaj:
+</p>
+
+<p>
+<a href="https://github.com/DominikKaluza06/labirint/blob/main/LICENSE">
+Ogled LICENSE datoteke
+</a>
 </p>
