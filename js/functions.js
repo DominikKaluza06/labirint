@@ -4,7 +4,7 @@ const defaultSwalConfig = {
 };
 
 // Privzeta barva čopiča
-    window.trenutnaBarva = "lightblue"; 
+    window.trenutnaBarva = "#0051ff"; 
 
     window.izberiBarvo = function(novaBarva) {
         window.trenutnaBarva = novaBarva;
