@@ -1,26 +1,23 @@
-window.addEventListener('load', function() {
-
+window.addEventListener('load', function () {
     const container = document.getElementById('svg_container');
     const canvas = document.getElementById('labirint');
 
-    // Če imamo v spominu var "ponovenPoskus", izžrebamo naključnega
+    // Izbira labirinta
     if (sessionStorage.getItem("ponovenPoskus") === "da") {
         izbira = Math.floor(Math.random() * vsiLabirinti.length);
         console.log("Ponoven poskus! Naložen labirint številka:", izbira + 1);
+        sessionStorage.removeItem("ponovenPoskus"); // Počistimo, da ne bo vsak refresh nov labirint
     }
 
     container.innerHTML = vsiLabirinti[izbira];
 
-    // --- 2. POIŠČEMO SVG IN PREBEREMO ČARTE ---
-    const svgMaze = container.querySelector('svg'); 
-
+    const svgMaze = container.querySelector('svg');
     const ROWS = 61;
     const COLS = 61;
     const SVG_OFFSET = 2;
     const SVG_STEP = 16;
 
     const lineElements = svgMaze.querySelectorAll("line");
-
     const mazeLines = Array.from(lineElements).map(line => ({
         x1: parseFloat(line.getAttribute("x1")),
         y1: parseFloat(line.getAttribute("y1")),
@@ -63,124 +60,125 @@ window.addEventListener('load', function() {
     const cellH = canvas.height / ROWS;
 
     var player = { x: 29, y: 0 };
-
-    var sled = []; 
+    var sled = [];
     sled.push({ x: player.x, y: player.y, barva: window.trenutnaBarva });
 
     const slikaCopica = new Image();
-    slikaCopica.src = 'slike/player.png'; 
+    slikaCopica.src = 'slike/player.png';
 
-    // Ko se slika naloži, ponovno nariše sceno, da se čopič takoj prikaže
-    slikaCopica.onload = function() {
+    slikaCopica.onload = function () {
         drawScene();
     };
 
-function drawScene() {
+    function drawScene() {
         ctx.clearRect(0, 0, canvas.width, canvas.height);
-        
-        const padding = 1; 
-        const zamikX = -1; 
-        const zamikY = -1; 
 
-// --- 1. NARIŠE NEPREKINJENO SLED (VEČBARVNO) ---
+        const zamikX = -1;
+        const zamikY = -1;
+
+        // 1. NARIŠE SLED
         if (sled.length > 1) {
-            ctx.lineWidth = (cellW / 2);   
-            ctx.lineCap = "round";         
-            ctx.lineJoin = "round";        
+            ctx.lineWidth = cellW / 2;
+            ctx.lineCap = "round";
+            ctx.lineJoin = "round";
 
             for (var i = 1; i < sled.length; i++) {
                 ctx.beginPath();
-                ctx.strokeStyle = sled[i].barva; 
+                ctx.strokeStyle = sled[i].barva;
 
-                var prevX = (sled[i-1].x * cellW) + (cellW / 2) + zamikX;
-                var prevY = (sled[i-1].y * cellH) + (cellH / 2) + zamikY;
-                ctx.moveTo(prevX, prevY); 
+                var prevX = (sled[i - 1].x * cellW) + (cellW / 2) + zamikX;
+                var prevY = (sled[i - 1].y * cellH) + (cellH / 2) + zamikY;
+                ctx.moveTo(prevX, prevY);
 
                 var currX = (sled[i].x * cellW) + (cellW / 2) + zamikX;
                 var currY = (sled[i].y * cellH) + (cellH / 2) + zamikY;
-                ctx.lineTo(currX, currY); 
-                
-                ctx.stroke(); 
+                ctx.lineTo(currX, currY);
+
+                ctx.stroke();
             }
         }
-        // --- 2. NARIŠE GLAVNEGA IGRALCA
-        
-        var faktorPovecave = 5; 
-        
 
+        // 2. NARIŠE IGRALCA
+        var faktorPovecave = 5;
         var igralecSirina = cellW * faktorPovecave;
         var igralecVisina = cellH * faktorPovecave;
 
-        // Izračunamo sredino trenutne celice, kjer stoji igralec
         var centerCeliceX = (player.x * cellW) + (cellW / 2) + zamikX;
         var centerCeliceY = (player.y * cellH) + (cellH / 2) + zamikY;
 
-        // --- DODATNI ROČNI ZAMIK (spremeni te številke po občutku) ---
-        var premikLevoDesno = -5; // Negativno gre LEVO, pozitivno DESNO
-        var premikGorDol = 5;     // Pozitivno gre DOL, negativno GOR
+        var premikLevoDesno = -5;
+        var premikGorDol = 5;
 
-        // Končni izračun pozicije slike
-        var igralecX = centerCeliceX + premikLevoDesno; 
-        var igralecY = (centerCeliceY - igralecVisina) + premikGorDol; 
+        var igralecX = centerCeliceX + premikLevoDesno;
+        var igralecY = (centerCeliceY - igralecVisina) + premikGorDol;
 
-        ctx.drawImage(slikaCopica, igralecX, igralecY, igralecSirina, igralecVisina);   
-
+        if (slikaCopica.complete) {
+            ctx.drawImage(slikaCopica, igralecX, igralecY, igralecSirina, igralecVisina);
+        }
     }
 
     var preostaliPremiki = 800;
-    var igraAktivna = true; 
+    var igraAktivna = true;
 
     const htmlPoteze = document.getElementById('poteze_stevilka');
     if (htmlPoteze) {
         htmlPoteze.innerText = preostaliPremiki;
     }
 
-    window.addEventListener('keydown', function(e) {
+    window.addEventListener('keydown', function (e) {
         if (!igraAktivna) return;
 
         var nextX = player.x;
         var nextY = player.y;
 
-        if (e.key === "ArrowUp" || e.key === "w") { nextY--; e.preventDefault(); } 
-        else if (e.key === "ArrowDown" || e.key === "s") { nextY++; e.preventDefault(); } 
-        else if (e.key === "ArrowLeft" || e.key === "a") { nextX--; e.preventDefault(); } 
-        else if (e.key === "ArrowRight" || e.key === "d") { nextX++; e.preventDefault(); } 
+        if (e.key === "ArrowUp" || e.key === "w") { nextY--; e.preventDefault(); }
+        else if (e.key === "ArrowDown" || e.key === "s") { nextY++; e.preventDefault(); }
+        else if (e.key === "ArrowLeft" || e.key === "a") { nextX--; e.preventDefault(); }
+        else if (e.key === "ArrowRight" || e.key === "d") { nextX++; e.preventDefault(); }
         else { return; }
 
-if (nextX >= 0 && nextX < COLS && nextY >= 0 && nextY < ROWS) {
-            if (mazeA[nextY][nextX] === 0) { 
+        if (nextX >= 0 && nextX < COLS && nextY >= 0 && nextY < ROWS) {
+            if (mazeA[nextY][nextX] === 0) {
                 if (player.x !== nextX || player.y !== nextY) {
-                    
-                    // 1. Preveri, ce je na tem polju že bil
                     var zeObiskano = sled.some(polje => polje.x === nextX && polje.y === nextY);
 
-                    // 2. Igralca fizično premakne
                     player.x = nextX;
                     player.y = nextY;
-                    
-                    sled.push({ x: player.x, y: player.y, barva: window.trenutnaBarva });   
 
-                    drawScene(); 
+                    sled.push({ x: player.x, y: player.y, barva: window.trenutnaBarva });
 
-                    // --- PREVERI, ČE JE IGRALEC NA CILJU ---
-                    if (player.x === 29 && player.y === (ROWS - 1)) {
-                        igraAktivna = false; 
-                        zmaga();             
-                        return; 
+                    drawScene();
+
+                    if (player.x === 31 && player.y === (ROWS - 1)) {
+                        igraAktivna = false;
+                        zmaga();
+                        return;
                     }
 
-                    // --- POTEZE ODŠTEJEMO SAMO, ČE POLJE ŠE NI BILO OBISKANO ---
                     if (!zeObiskano) {
                         preostaliPremiki--;
+                        if (htmlPoteze) htmlPoteze.innerText = preostaliPremiki;
 
-                        if (htmlPoteze) {
-                            htmlPoteze.innerText = preostaliPremiki;
+                        // Izračun porabljenih (izhajamo iz 800, ker si tako nastavil spremenljivko)
+                        var porabljene = 800 - preostaliPremiki;
+                        console.log("Porabljene poteze: " + porabljene); // Debugging
+
+                        const div1 = document.getElementById('obmocje-slika-1');
+                        const div2 = document.getElementById('obmocje-slika-2');
+
+                        if (div1 && porabljene >= 100) {
+                            div1.style.opacity = "1";
+                            console.log("Prikazujem sliko 1");
+                        }
+                        if (div2 && porabljene >= 200) {
+                            div2.style.opacity = "1";
+                            console.log("Prikazujem sliko 2");
                         }
 
                         // Preverimo poraz
                         if (preostaliPremiki <= 0) {
-                            igraAktivna = false; 
-                            konecIgre(); 
+                            igraAktivna = false;
+                            konecIgre();
                         }
                     }
                 }
@@ -189,5 +187,4 @@ if (nextX >= 0 && nextX < COLS && nextY >= 0 && nextY < ROWS) {
     });
 
     drawScene();
-    console.log("Labirint in igralec uspešno izrisana!");
 });
